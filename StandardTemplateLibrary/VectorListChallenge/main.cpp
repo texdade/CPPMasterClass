@@ -15,6 +15,7 @@
 class Guest
 {
 public:
+	Guest(){}
 	Guest(std::string name, std::string gender, int age)
     {
         this->name = name;
@@ -22,6 +23,13 @@ public:
         this->age = age;
     }
 	~Guest(){}
+
+	void toLog() const{
+		std::cout << "-----------------------------\n";
+        std::cout << "Name: " << name << std::endl;
+		std::cout << "Gender: " << gender << std::endl;
+		std::cout << "Age: " << age << std::endl;
+	}
 
     const std::string& getName() const { return name; }
     const std::string& getGender() const { return gender; }
@@ -64,22 +72,49 @@ void readFile(myContainer& myGuests)
 		inFile.close();
 	}
 	else
+	{
 		std::cout << "Unable to open file!\n\n";
+	}
+}
+
+bool getGuest(const myContainer& myGuests, const int index, Guest& guest)
+{
+	myContainer::const_iterator it = myGuests.begin();
+	std::advance(it, index);
+	if(it != myGuests.end())
+	{
+		guest = *it;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+void calculateAverageAge(const myContainer& myGuests)
+{
+	float totalAge = 0;
+	float totalGuests = myGuests.size();
+
+	for(const Guest& guest : myGuests)
+	{
+		totalAge += guest.getAge();
+	}
+
+	std::cout << "Average age: " << totalAge / totalGuests << std::endl;
 }
 
 void printGuests(const myContainer& myGuests)
 {
-	auto it = myGuests.begin();
+	myContainer::const_iterator it = myGuests.begin();
 	
 	std::cout << "-- Container Content Start --\n";
 	std::cout << "-----------------------------\n";
 
     for(const Guest& guest : myGuests)
     {
-        std::cout << "Name: " << guest.getName() << std::endl;
-		std::cout << "Gender: " << guest.getGender() << std::endl;
-		std::cout << "Age: " << guest.getAge() << std::endl;
-		std::cout << "-----------------------------\n";
+		guest.toLog();
     }
 
 	std::cout << "--  Container Content End  --\n";
@@ -89,7 +124,19 @@ int main()
 {
 	myContainer myGuests = myContainer();
 	readFile(myGuests);
+
+	Guest guest;
+	if(getGuest(myGuests, 2, guest))
+	{
+		guest.toLog();
+	}
+	else
+	{
+		(std::cout << "Guest not found!\n");
+	}
+
 	printGuests(myGuests);
+	calculateAverageAge(myGuests);
 	return 0;
 }
 
