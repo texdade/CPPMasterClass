@@ -24,7 +24,8 @@ public:
     }
 	~Guest(){}
 
-	void toLog() const{
+	void toLog() const
+	{
 		std::cout << "-----------------------------\n";
         std::cout << "Name: " << name << std::endl;
 		std::cout << "Gender: " << gender << std::endl;
